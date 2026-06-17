@@ -241,7 +241,6 @@ def create_demo():
         theme=gr.themes.Soft(
             primary_hue="blue",
             secondary_hue="slate",
-            font=gr.themes.GoogleFont("Inter"),
         ),
     ) as demo:
         gr.HTML(HEADER_HTML)
