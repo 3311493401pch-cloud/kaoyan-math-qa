@@ -17,7 +17,6 @@ from openai import OpenAI
 KB_PATH = "knowledge_base.pkl"
 CACHE_DB = "./cache.db"
 
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 LLM_MODEL = "deepseek-chat"
 
@@ -92,9 +91,18 @@ class RAGEngine:
         print("💾 初始化缓存...")
         self.cache = AnswerCache()
 
-        print("🔗 初始化 DeepSeek...")
-        self.llm = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_BASE_URL)
+        self._llm = None  # 懒加载
         print("✅ 引擎就绪")
+
+    @property
+    def llm(self):
+        if self._llm is None:
+            key = os.environ.get("DEEPSEEK_API_KEY", "")
+            if not key:
+                raise RuntimeError("未设置 DEEPSEEK_API_KEY 环境变量")
+            print("🔗 连接 DeepSeek...")
+            self._llm = OpenAI(api_key=key, base_url=DEEPSEEK_BASE_URL)
+        return self._llm
 
     def search(self, question: str, top_k: int = TOP_K) -> list[dict]:
         """TF-IDF 检索"""
