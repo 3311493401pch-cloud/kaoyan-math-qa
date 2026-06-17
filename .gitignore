@@ -1,6 +1,3 @@
-# 知识库（部署时自动构建）
-knowledge_base.pkl
-
 # 缓存数据库
 cache.db
 
