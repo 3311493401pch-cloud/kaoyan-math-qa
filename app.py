@@ -12,26 +12,21 @@ engine = RAGEngine()
 # ============================================================
 # 对话处理
 # ============================================================
-def chat(message: str, history: list[list[str]]):
+def chat(message: str, history: list):
     """处理一轮对话"""
     if not message.strip():
         yield "请输入你的考研数学问题～"
         return
 
-    # 调用 RAG 引擎
     result = engine.ask(message)
-
     answer = result["answer"]
     source_type = result["source_type"]
     hits = result["hits"]
     from_cache = result.get("from_cache", False)
 
-    # 构建展示用的答案
-    # 追加来源标注
     if source_type == "ai_generated":
         answer += "\n\n---\n🤖 **注意**：以上建议由 AI 基于通用知识生成，未在全年规划表中找到充分匹配的内容，请结合实际情况判断。"
 
-    # 追加检索来源（可折叠提示）
     if hits and not from_cache:
         answer += "\n\n---\n📋 **参考来源**（来自规划表）：\n"
         seen = set()
@@ -46,7 +41,6 @@ def chat(message: str, history: list[list[str]]):
     if from_cache:
         answer += "\n\n---\n💾 该答案来自缓存（重复问题，零费用）"
 
-    # 缓存统计
     stats = engine.cache.stats()
     answer += f"\n\n---\n📊 缓存命中: {stats['valid']} 条（帮省了 {stats['valid']} 次 API 调用）"
 
@@ -65,8 +59,6 @@ DESCRIPTION = """
 - 👨‍🏫 线代/概率论该跟哪个老师？
 - 📚 某本习题册/模拟卷怎么样？
 - 🎯 不同目标分数（130+ / 110-130 / 110-）分别怎么安排？
-
-**数据来源：** 6 张 Excel Sheet，涵盖全年规划 + 名师测评 + 书籍测评
 """
 
 EXAMPLES = [
@@ -87,16 +79,10 @@ with gr.Blocks(css=css, title="考研数学 Q&A") as demo:
     gr.Markdown(f"# {TITLE}")
     gr.Markdown(DESCRIPTION)
 
-    chatbot = gr.ChatInterface(
+    gr.ChatInterface(
         fn=chat,
-        title="",
-        description="",
         examples=EXAMPLES,
         theme="soft",
-        submit_btn="发送",
-        retry_btn="重新生成",
-        undo_btn="撤销",
-        clear_btn="清空对话",
     )
 
 if __name__ == "__main__":

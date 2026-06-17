@@ -1,6 +1,6 @@
 openpyxl==3.1.5
 jieba==0.42.1
-scikit-learn==1.5.0
+scikit-learn>=1.5.0
 gradio==5.9.0
 openai==1.58.1
 requests==2.32.3
