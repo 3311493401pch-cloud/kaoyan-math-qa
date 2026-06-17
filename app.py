@@ -100,9 +100,10 @@ with gr.Blocks(css=css, title="考研数学 Q&A") as demo:
     )
 
 if __name__ == "__main__":
-    # 本地运行时用 share=False，部署到 Render 时 Gradio 默认监听 0.0.0.0:7860
+    import os
+    port = int(os.environ.get("PORT", 7860))
     demo.launch(
         server_name="0.0.0.0",
-        server_port=7860,
+        server_port=port,
         share=False,
     )
