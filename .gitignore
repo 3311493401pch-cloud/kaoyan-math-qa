@@ -1,0 +1,22 @@
+# Chroma 向量库（本地重建即可）
+chroma_data/
+
+# 缓存数据库
+cache.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 环境变量
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
